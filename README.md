@@ -17,9 +17,7 @@ Develop a React application that manages "Patient" entities with support for dat
 [Swagger UI](https://mobile.digistat.it/CandidateApi/swagger/index.html)
 
 **Authentication (HTTP Basic Auth):**
-
-* **Username:** `test`
-* **Password:** `TestMePlease!`
+...
 
 ---
 
