@@ -4,23 +4,11 @@ import { useMemo, useState } from "react";
 	specific patient info for PatientRegister
 	(different from expanded info of a patient)
 */
-function Patient({patient}) {
-	const [alarm, setAlarm] = useState(false);
-
-	const numParams = useMemo(() => (
-		patient.parameters.length), [patient.parameters]);
-
-	const hasAlarm = useMemo(() => {
-		const alarmCheck = patient.parameters.some((param) => (param.alarm === true));
-		setAlarm(alarmCheck);
-		return alarmCheck;
-	}, [patient.parameters]);
+function Patient({patient, numParams, alarm}) {
 
 	function changeAlarm(){
-		setAlarm(!alarm);
+		!alarm;
 	};
-
-
 
 	const readableDate = new Date(patient.birthDate).toLocaleDateString();
 	const sexCheck = patient.sex ? patient.sex : "X";

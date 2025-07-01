@@ -1,6 +1,8 @@
 import { getPatients } from "../axios/Api";
 import Patient from "./Patient";
 import { useEffect, useState } from "react";
+import filterPatients from "../utils/filterPatients";
+import patientProps from "../utils/patientProps";
 
 /**
 	component with basic table of patients (patient register)
@@ -18,6 +20,14 @@ import { useEffect, useState } from "react";
 function PatientRegister({ onClose }) {
 	const [patients, setPatients] = useState([]);
 	const [filterPrompt, setFilterPrompt] = useState(false);
+	const [filters, setFilters] = useState({
+		familyName: "",
+		givenName: "",
+		sex: "",
+		dateOfBirth: "",
+		parameters: "",
+		alarm: ""
+	});
 
 	//fetching patient data from cache or external API
 	useEffect(() => {
@@ -66,25 +76,41 @@ function PatientRegister({ onClose }) {
 	  			{filterPrompt &&
 					<tr>
 						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Family name" />
+							<input className="w-full bg-gray-100 text-gray-500" placeholder="Family name" 
+								value={filters.familyName}
+								onChange={(event) => setFilters((filter) => ({...filter, familyName: event.target.value}))}
+
+							/>
 						</th>
 						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Given name" />
+							<input className="w-full bg-gray-100 text-gray-500" placeholder="Given name" 
+								value={filters.givenName}
+								onChange={(event) => setFilters((filter) => ({...filter, givenName: event.target.value}))}
+							/>
 						</th>
 						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Sex" />
+							<input className="w-full bg-gray-100 text-gray-500" placeholder="Sex" 
+								value={filters.sex}
+								onChange={(event) => setFilters((filter) => ({...filter, sex: event.target.value}))}
+							/>
 						</th>
 						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Date of birth" />
+							<input className="w-full bg-gray-100 text-gray-500" placeholder="Date of birth" 
+								value={filters.dateOfBirth}
+								onChange={(event) => setFilters((filter) => ({...filter, dateOfBirth: event.target.value}))}
+							/>
 						</th>
 						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Parameters" />
+							<input className="w-full bg-gray-100 text-gray-500" placeholder="Parameters" 
+								value={filters.parameters}
+								onChange={(event) => setFilters((filter) => ({...filter, parameters: event.target.value}))}
+							/>
 						</th>
 						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Alarm" />
-						</th>
-						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Info" />
+							<input className="w-full bg-gray-100 text-gray-500" placeholder="Alarm" 
+								value={filters.alarm}
+								onChange={(event) => setFilters((filter) => ({...filter, alarm: event.target.value}))}
+							/>
 						</th>
 					</tr>
 				}
@@ -99,8 +125,9 @@ function PatientRegister({ onClose }) {
 				</tr>
 			</thead>
 	  		<tbody>
-	  			{patients.map((patient) => (
-					<Patient key={patient.id} patient={patient} /> ))
+	  			{filterPatients(patients,filters).map((patient) => {
+					const [numParams, alarm] = patientProps(patient);
+					return <Patient key={patient.id} patient={patient} numParams={numParams} alarm={alarm}/> })
 				}
 	  		</tbody>
 		  </table>
