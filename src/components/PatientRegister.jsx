@@ -1,11 +1,14 @@
 import { getPatients } from "../axios/Api";
-import Patient from "./Patient";
 import { useEffect, useState } from "react";
-import filterPatients from "../utils/filterPatients";
+import {filterPatients, sortPatients} from "../utils/filterPatients";
 import patientProps from "../utils/patientProps";
+import Patient from "./Patient";
+import Filters from "./Filters";
+import DetailsView from "./DetailsView";
 
 /**
 	component with basic table of patients (patient register)
+
 	table params:
 		- family name
 		- given name
@@ -16,10 +19,15 @@ import patientProps from "../utils/patientProps";
 		- info (expand info of patient)
 	has a cache that updates only roughly every 5min (faster sequential loading)
 	in background it compares cache with fetched data to see, if it needs to refresh
+
+	TODO - caching has some bugs; but maybe they are jut based on how vite refreshes
+			sometimes the the table doesn't load after changing certain parts of DOMS
+
 */
 function PatientRegister({ onClose }) {
 	const [patients, setPatients] = useState([]);
 	const [filterPrompt, setFilterPrompt] = useState(false);
+	const [detailView, setDetailView] = useState(null);
 	const [filters, setFilters] = useState({
 		familyName: "",
 		givenName: "",
@@ -27,6 +35,14 @@ function PatientRegister({ onClose }) {
 		dateOfBirth: "",
 		parameters: "",
 		alarm: ""
+	});
+	const [sorts, setSorts] = useState({
+		familyName: false,
+		givenName: false,
+		sex: false,
+		dateOfBirth: false,
+		parameters: false,
+		alarm: false
 	});
 
 	//fetching patient data from cache or external API
@@ -63,74 +79,56 @@ function PatientRegister({ onClose }) {
 	useEffect(() => {
 		console.log(patients[0]);
 		console.log(patients[0]?.parameters);
+		console.log(detailView, "viewwww");
 	}, [patients]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-opacity-100 z-70 pointer-events-none">
 	  <div className="border-2 border-black  p-6 rounded bg-black w-3/4 h-2/3 shadow-lg pointer-events-auto">
-		  <button classname="items-start justify-end" onClick={onClose}>Close</button>
-		  <button classname="items-start justify-end" onClick={toFilter}>Filter</button>
+		  <button className="items-start justify-end" onClick={onClose}>Close</button>
+	  	  {detailView === null &&
+			  <button className="items-start justify-end" onClick={toFilter}>Filter</button>
+		  }
 		  <div className="overflow-auto">
-		  <table className="min-w-full border">
-			<thead>
-	  			{filterPrompt &&
+	  	  {detailView === null ? (
+			  <table className="min-w-full border">
+				<thead>
+					{filterPrompt && 
+						<Filters 
+							filters={filters}
+							setFilters={setFilters}
+							sorts={sorts}
+							setSorts={setSorts}
+						/>
+					}
 					<tr>
-						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Family name" 
-								value={filters.familyName}
-								onChange={(event) => setFilters((filter) => ({...filter, familyName: event.target.value}))}
-
-							/>
-						</th>
-						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Given name" 
-								value={filters.givenName}
-								onChange={(event) => setFilters((filter) => ({...filter, givenName: event.target.value}))}
-							/>
-						</th>
-						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Sex" 
-								value={filters.sex}
-								onChange={(event) => setFilters((filter) => ({...filter, sex: event.target.value}))}
-							/>
-						</th>
-						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Date of birth" 
-								value={filters.dateOfBirth}
-								onChange={(event) => setFilters((filter) => ({...filter, dateOfBirth: event.target.value}))}
-							/>
-						</th>
-						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Parameters" 
-								value={filters.parameters}
-								onChange={(event) => setFilters((filter) => ({...filter, parameters: event.target.value}))}
-							/>
-						</th>
-						<th className="border px-2 py-1">
-							<input className="w-full bg-gray-100 text-gray-500" placeholder="Alarm" 
-								value={filters.alarm}
-								onChange={(event) => setFilters((filter) => ({...filter, alarm: event.target.value}))}
-							/>
-						</th>
+						<th className="border px-2 py-1">Family name</th>
+						<th className="border px-2 py-1">Given name</th>
+						<th className="border px-2 py-1">Sex</th>
+						<th className="border px-2 py-1">Date of birth</th>
+						<th className="border px-2 py-1">Parameters</th>
+						<th className="border px-2 py-1">Alarm</th>
+						<th className="border px-2 py-1">Info</th>
 					</tr>
-				}
-				<tr>
-					<th className="border px-2 py-1">Family name</th>
-					<th className="border px-2 py-1">Given name</th>
-					<th className="border px-2 py-1">Sex</th>
-					<th className="border px-2 py-1">Date of birth</th>
-					<th className="border px-2 py-1">Parameters</th>
-					<th className="border px-2 py-1">Alarm</th>
-					<th className="border px-2 py-1">Info</th>
-				</tr>
-			</thead>
-	  		<tbody>
-	  			{filterPatients(patients,filters).map((patient) => {
-					const [numParams, alarm] = patientProps(patient);
-					return <Patient key={patient.id} patient={patient} numParams={numParams} alarm={alarm}/> })
-				}
-	  		</tbody>
-		  </table>
+				</thead>
+				<tbody>
+					{filterPatients(sortPatients(patients, sorts), filters).map((patient) => {
+						const [numParams, alarm] = patientProps(patient);
+						return <Patient 
+							key={patient.id} 
+							patient={patient} 
+							numParams={numParams} 
+							alarm={alarm}
+							detailView={detailView}
+							setDetailView={setDetailView}
+							/> 
+						})
+					}
+				</tbody>
+			  </table> ) 
+			  :
+			  (<DetailsView id={detailView} setDetailView={setDetailView} /> )
+		  }
 	  	  </div>
 	  </div>
 	</div>

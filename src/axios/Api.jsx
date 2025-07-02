@@ -16,4 +16,10 @@ const getPatients = async () => {
 		return response.data;
 };
 
-export  {getPatients};
+const getPatient = async (id) => {
+	const response = await api.get(`/Patient/Get/${id}`)
+	console.log(response.data);
+	return response.data;
+}
+
+export  {getPatients, getPatient};

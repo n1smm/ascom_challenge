@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 	specific patient info for PatientRegister
 	(different from expanded info of a patient)
 */
-function Patient({patient, numParams, alarm}) {
+function Patient({patient, numParams, alarm, detailView, setDetailView}) {
 
 	function changeAlarm(){
 		!alarm;
@@ -13,7 +13,9 @@ function Patient({patient, numParams, alarm}) {
 	const readableDate = new Date(patient.birthDate).toLocaleDateString();
 	const sexCheck = patient.sex ? patient.sex : "X";
   return (
-		<tr>
+		<tr 
+			onClick={() => (setDetailView(patient.id) && console.log(detailView))}
+	  	>
 			<td className="border px-2 py-1">{patient.familyName}</td>
 			<td className="border px-2 py-1">{patient.givenName}</td>
 			<td className="border px-2 py-1">{sexCheck}</td>
