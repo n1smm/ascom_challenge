@@ -82,6 +82,7 @@ function PatientRegister({ onClose }) {
 		console.log(detailView, "viewwww");
 	}, [patients]);
 
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-opacity-100 z-70 pointer-events-none">
 	  <div className="border-2 border-black  p-6 rounded bg-black w-3/4 h-2/3 shadow-lg pointer-events-auto">

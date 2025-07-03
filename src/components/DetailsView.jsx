@@ -180,7 +180,6 @@ function DetailsEdit({patient, setValues, values, edit}) {
 				<dd>{values.givenName} </dd>
 				<dd>{values.sex} </dd>
 				<dd>{values.birthDate}</dd>
-
 			</dl>
 		</dl>
 	);
