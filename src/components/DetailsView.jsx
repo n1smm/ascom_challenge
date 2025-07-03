@@ -1,13 +1,21 @@
-import { getPatient } from "../axios/Api";
 import { useState, useEffect } from "react";
+import { getPatient } from "../axios/Api";
+import ParameterList from "./ParameterList";
 
 
 
 function DetailsView({id, setDetailView}) {
 	const [patient, setPatient] = useState(null);
 	const [edit, setEdit] = useState(false);
+	const [values, setValues] = useState({
+		familyName: "",
+		givenName: "",
+		birthDate: "",
+		sex: "",
+		parameters: [],
+	});
 
-	//fetch or cache retrival
+	//fetch or cache retrieval
 	useEffect(() => {
 		const fetchPatient = async () => {
 			const cached = sessionStorage.getItem("Patient");
@@ -37,6 +45,31 @@ function DetailsView({id, setDetailView}) {
 		setDetailView(null);
 	};
 
+	async function applyChange() {
+		setEdit(!edit);
+		if (Notification.permission === "granted") {
+			new Notification(`Patients
+				${patient.familyName} ${patient.givenName} data has been updated`);
+		}
+		else {
+			Notification.requestPermission().then((permission) => {
+				if (permission === "granted") {
+					new Notification(`Patients
+						${patient.familyName} ${patient.givenName} 
+						data has been updated!`,
+						{
+							body: `new data:
+								${patient.familyName}
+								${patient.givenName}
+								${patient.birthDate}
+								${patient.sex}
+						`});
+				}
+			});
+		}
+
+	}	
+
 	if (!patient)
 		return (<p>...Loading</p>);
 
@@ -46,49 +79,48 @@ function DetailsView({id, setDetailView}) {
 		{ !edit ?
 			(<button onClick={() => setEdit(!edit)}>Edit</button>)
 			:
-			(<button onClick={() => setEdit(!edit)}>Apply</button>)
+			(<button onClick={() => applyChange()}>Apply</button>)
 		}
 		{ !edit ? (
-			<dl className=" text-4xl grid grid-cols-2 gap-x-4 gap-y-8">
+			<dl className=" text-4xl grid grid-cols-2 gap-x-20 gap-y-8">
 				<dt className="font-semibold text-right">Family name</dt>
-				<dd>{patient.familyName}</dd>
+				<dd className="text-left">{patient.familyName}</dd>
 
 				<dt className="font-semibold text-right">Given name</dt>
-				<dd>{patient.givenName}</dd>
+				<dd className="text-left">{patient.givenName}</dd>
 
 				<dt className="font-semibold text-right">Date of birth</dt>
-				<dd>{patient.birthDate}</dd>
+				<dd className="text-left">{patient.birthDate}</dd>
 
 				<dt className="font-semibold text-right">Sex</dt>
-				<dd>{patient.sex}</dd>
+				<dd className="text-left">{patient.sex}</dd>
 
 				<dt className="font-semibold text-right">Parameters</dt>
-				<dd>foo</dd>
+				<dd className="text-left">
+					<ParameterList parameters={patient.parameters}/>
+				</dd>
 			</dl> )
-			: (<DetailsEdit patient={patient}/>)
+			: (<DetailsEdit 
+					patient={patient} 
+					setValues={setValues}
+					values={values}
+					edit={edit}
+				/>)
 		}
 		</div>
 	)
 }
 
 
-function DetailsEdit(patient) {
-	const [values, setValues] = useState({
-		familyName: patient.familyName || "",
-		givenName: patient.givenName || "",
-		birthDate: patient.birthDate || "",
-		sex: patient.sex || "",
-		parameters: "",
-	});
+function DetailsEdit({patient, setValues, values, edit}) {
 
-	function handleChange(e) {
-		const { name, value } = e.target;
+	function handleChange(event) {
+		const { name, value } = event.target;
 		setValues((prev) => ({ ...prev, [name]: value }));
-		if (onChange) onChange({ ...values, [name]: value });
 	}
 
 	return (
-		<dl className="text-4xl grid grid-cols-2 gap-x-4 gap-y-8">
+		<dl className="text-4xl grid items-center grid-cols-2 gap-x-20 gap-y-8 w-full">
 		  <dt className="font-semibold text-right">Family name</dt>
 		  <dd>
 			<input
@@ -96,7 +128,7 @@ function DetailsEdit(patient) {
 			  value={values.familyName}
 			  placeholder={patient.familyName}
 			  onChange={handleChange}
-			  className="border px-2 py-1"
+			  className="border px-2 py-1 w-full"
 			/>
 		  </dd>
 
@@ -107,18 +139,19 @@ function DetailsEdit(patient) {
 			  value={values.givenName}
 			  placeholder={patient.givenName}
 			  onChange={handleChange}
-			  className="border px-2 py-1"
+			  className="border px-2 py-1 w-full"
 			/>
 		  </dd>
 
 		  <dt className="font-semibold text-right">Date of birth</dt>
 		  <dd>
 			<input
+			  type="date"
 			  name="birthDate"
 			  value={values.birthDate}
 			  placeholder={patient.birthDate}
 			  onChange={handleChange}
-			  className="border px-2 py-1"
+			  className="border px-2 py-1 w-full"
 			/>
 		  </dd>
 
@@ -129,20 +162,26 @@ function DetailsEdit(patient) {
 			  value={values.sex}
 			  placeholder={patient.sex}
 			  onChange={handleChange}
-			  className="border px-2 py-1"
+			  className="border px-2 py-1 w-full"
 			/>
 		  </dd>
 
 		  <dt className="font-semibold text-right">Parameters</dt>
 		  <dd>
-			<input
-			  name="parameters"
-			  value={values.parameters}
-			  placeholder="foo"
-			  onChange={handleChange}
-			  className="border px-2 py-1"
-			/>
+				<ParameterList
+					parameters={patient.parameters}
+					edit={edit}
+					values={values}
+					setValues={setValues}
+				/>
 		  </dd>
+			<dl>
+				<dd>{values.familyName} </dd>
+				<dd>{values.givenName} </dd>
+				<dd>{values.sex} </dd>
+				<dd>{values.birthDate}</dd>
+
+			</dl>
 		</dl>
 	);
 }

@@ -22,4 +22,9 @@ const getPatient = async (id) => {
 	return response.data;
 }
 
+const updatePatient = async(patient, values) => {
+
+
+}
+
 export  {getPatients, getPatient};
