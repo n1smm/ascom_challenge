@@ -1,12 +1,7 @@
 import {useState} from "react";
 
-function ParameterList({parameters, edit, values, setValues}) {
-	const [selectedParam, setSelectedParam] = useState(0);
+function ParameterList({parameters, edit, values, setValues, selectedParam, setSelectedParam}) {
 
-	// function handleChange(event) {
-	// 	const { name, value } = event.target;
-	// 	setValues((prev) => ({ ...prev.parameters, parameters: [[name]: value] }));
-	// }
 	function handleChange(event) {
 		const { name, value } = event.target;
 		const updatedParameters = [...values.parameters];

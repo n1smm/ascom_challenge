@@ -22,9 +22,34 @@ const getPatient = async (id) => {
 	return response.data;
 }
 
-const updatePatient = async(patient, values) => {
-
-
+const updatePatient = async (patient, values, paramId) => {
+	if (paramId === -1)
+		paramId = Number(patient.id);
+	try {
+	const modifiedPatient = {
+		id: patient.id,
+		familyName: values.familyName || patient.familyName,
+		givenName: values.givenName || patient.givenName,
+		birthDate: values.birthDate || patient.birthDate,
+		sex: values.sex || patient.sex,
+		parameters: [
+			{
+				id: paramId,
+				name: values.parameters[paramId]?.name || patient.parameters[paramId]?.name,
+				value: values.parameters[paramId]?.value || patient.parameters[paramId]?.value,
+				alarm: values.parameters[paramId]?.alarm || patient.parameters[paramId]?.alarm
+			}
+		]
+	}
+	console.log("modifiedPatient:", JSON.stringify(modifiedPatient, null, 2));
+	console.log("modifiedPatient:", JSON.stringify(modifiedPatient, null, 2));
+	const response = await api.post("/Patient/Update", modifiedPatient, {
+		headers: { "Content-Type": "application/json" }});
+	console.log("put response", response.status, response.data);
+	}
+	catch (error) {
+		console.error(error);
+	}
 }
 
-export  {getPatients, getPatient};
+export  {getPatients, getPatient, updatePatient};

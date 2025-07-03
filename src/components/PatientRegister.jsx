@@ -46,46 +46,53 @@ function PatientRegister({ onClose }) {
 	});
 
 	//fetching patient data from cache or external API
+	const fetchPatients = async () => {
+		const cached = sessionStorage.getItem("Patients");
+		const cachedData = cached ? JSON.parse(cached) : null;
+		const lastCacheTime = Number(sessionStorage.getItem("patients_timestamp"));
+		const now = Date.now();
+
+		if (cached && lastCacheTime && (now - lastCacheTime < 500000)) {
+			setPatients(cachedData);
+		}
+
+		try {
+			const data = await getPatients();
+			if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
+				setPatients(data);
+				sessionStorage.setItem("Patients", JSON.stringify(data));
+				sessionStorage.setItem("patients_timestamp", now.toString());
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
 	useEffect(() => {
-		const fetchPatients = async () => {
-			const cached = sessionStorage.getItem("Patients");
-			const cachedData = cached ? JSON.parse(cached) : null;
-			const lastCacheTime = Number(sessionStorage.getItem("patients_timestamp"));
-			const now = Date.now();
-
-			if (cached && lastCacheTime && (now - lastCacheTime < 500000)) {
-				setPatients(cachedData);
-			}
-
-			try {
-				const data = await getPatients();
-				if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
-					setPatients(data);
-					sessionStorage.setItem("Patients", JSON.stringify(data));
-					sessionStorage.setItem("patients_timestamp", now.toString());
-				}
-			} catch (error) {
-				console.error(error);
-			}
-		};
 		fetchPatients();
 	}, []);
+
+	async function refresh() {
+		try{
+			const now = Date.now();
+			const data = await getPatients();
+			setPatients(data);
+			sessionStorage.setItem("Patients", JSON.stringify(data));
+			sessionStorage.setItem("patients_timestamp", now.toString());
+		}
+		catch (error) {
+			console.error(error);
+		}
+	}
+
 
 	function toFilter() {
 		setFilterPrompt(!filterPrompt);
 	};
 
-	//debug -- delete later
-	useEffect(() => {
-		console.log(patients[0]);
-		console.log(patients[0]?.parameters);
-		console.log(detailView, "viewwww");
-	}, [patients]);
-
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-opacity-100 z-70 pointer-events-none">
-	  <div className="border-2 border-black  p-6 rounded bg-black w-3/4 h-2/3 shadow-lg pointer-events-auto">
+	  <div className="border-2 border-black  p-6 rounded bg-black w-3/4 h-2/3 shadow-lg pointer-events-auto overflow-scroll">
+		  <button className="items-start justify-end" onClick={refresh}>Refresh</button>
 		  <button className="items-start justify-end" onClick={onClose}>Close</button>
 	  	  {detailView === null &&
 			  <button className="items-start justify-end" onClick={toFilter}>Filter</button>

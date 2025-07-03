@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getPatient } from "../axios/Api";
+import { getPatient, updatePatient } from "../axios/Api";
 import ParameterList from "./ParameterList";
 
 
@@ -7,6 +7,8 @@ import ParameterList from "./ParameterList";
 function DetailsView({id, setDetailView}) {
 	const [patient, setPatient] = useState(null);
 	const [edit, setEdit] = useState(false);
+	const [reset, setReset] = useState(false);
+	const [selectedParam, setSelectedParam] = useState(0);
 	const [values, setValues] = useState({
 		familyName: "",
 		givenName: "",
@@ -16,30 +18,49 @@ function DetailsView({id, setDetailView}) {
 	});
 
 	//fetch or cache retrieval
+	const fetchPatient = async () => {
+		const cached = sessionStorage.getItem("Patient");
+		const cachedData = cached ? JSON.parse(cached) : null;
+		const lastCacheTime = Number(sessionStorage.getItem("patient_timestamp"));
+		const now = Date.now();
+
+		if (cached && lastCacheTime && (now - lastCacheTime < 500000)) {
+			setPatient(cachedData);
+		}
+
+		try {
+			const data = await getPatient(id);
+			if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
+				setPatient(data);
+				sessionStorage.setItem("Patient", JSON.stringify(data));
+				sessionStorage.setItem("patient_timestamp", now.toString());
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	useEffect(() => {
-		const fetchPatient = async () => {
-			const cached = sessionStorage.getItem("Patient");
-			const cachedData = cached ? JSON.parse(cached) : null;
-			const lastCacheTime = Number(sessionStorage.getItem("patient_timestamp"));
-			const now = Date.now();
-
-			if (cached && lastCacheTime && (now - lastCacheTime < 500000)) {
-				setPatient(cachedData);
-			}
-
-			try {
-				const data = await getPatient(id);
-				if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
-					setPatient(data);
-					sessionStorage.setItem("Patient", JSON.stringify(data));
-					sessionStorage.setItem("patient_timestamp", now.toString());
-				}
-			} catch (error) {
-				console.error(error);
-			}
-		};
 		fetchPatient();
 	}, [id]);
+
+	useEffect(() => {
+		const timer = setTimeout(() => setReset(true), 2000);
+		return () => clearTimeout(timer);
+	},[]);
+
+	async function refresh() {
+		try{
+			const now = Date.now();
+			const data = await getPatient();
+			setPatient(data);
+			sessionStorage.setItem("Patient", JSON.stringify(data));
+			sessionStorage.setItem("patient_timestamp", now.toString());
+		}
+		catch (error) {
+			console.error(error);
+		}
+	}
 
 	function previousPage() {
 		setDetailView(null);
@@ -47,6 +68,8 @@ function DetailsView({id, setDetailView}) {
 
 	async function applyChange() {
 		setEdit(!edit);
+		await updatePatient(patient, values, selectedParam);
+		await fetchPatient();
 		if (Notification.permission === "granted") {
 			new Notification(`Patients
 				${patient.familyName} ${patient.givenName} data has been updated`);
@@ -71,10 +94,15 @@ function DetailsView({id, setDetailView}) {
 	}	
 
 	if (!patient)
-		return (<p>...Loading</p>);
+		return (
+			<div>
+			<p>...Loading</p>
+			{reset && <button onClick={refresh}>refresh</button>}
+			</div>
+		);
 
 	return (
-		<div>
+		<div className="overflow-hidden">
 		<button onClick={previousPage}>&lt;&lt;</button>
 		{ !edit ?
 			(<button onClick={() => setEdit(!edit)}>Edit</button>)
@@ -97,7 +125,15 @@ function DetailsView({id, setDetailView}) {
 
 				<dt className="font-semibold text-right">Parameters</dt>
 				<dd className="text-left">
-					<ParameterList parameters={patient.parameters}/>
+					<ParameterList
+						parameters={patient.parameters}
+						edit={edit}
+						values={values}
+						setValues={setValues}
+						selectedParam={selectedParam}
+						setSelectedParam={setSelectedParam}
+						className="overflow-scroll"
+					/>
 				</dd>
 			</dl> )
 			: (<DetailsEdit 
@@ -105,6 +141,8 @@ function DetailsView({id, setDetailView}) {
 					setValues={setValues}
 					values={values}
 					edit={edit}
+					selectedParam={selectedParam}
+					setSelectedParam={setSelectedParam}
 				/>)
 		}
 		</div>
@@ -112,7 +150,7 @@ function DetailsView({id, setDetailView}) {
 }
 
 
-function DetailsEdit({patient, setValues, values, edit}) {
+function DetailsEdit({patient, setValues, values, edit, selectedParam, setSelectedParam}) {
 
 	function handleChange(event) {
 		const { name, value } = event.target;
@@ -173,6 +211,8 @@ function DetailsEdit({patient, setValues, values, edit}) {
 					edit={edit}
 					values={values}
 					setValues={setValues}
+					selectedParam={selectedParam}
+					setSelectedParam={setSelectedParam}
 				/>
 		  </dd>
 			<dl>
