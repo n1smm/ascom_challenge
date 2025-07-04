@@ -52,7 +52,7 @@ function DetailsView({id, setDetailView}) {
 	async function refresh() {
 		try{
 			const now = Date.now();
-			const data = await getPatient();
+			const data = await getPatient(id);
 			setPatient(data);
 			sessionStorage.setItem("Patient", JSON.stringify(data));
 			sessionStorage.setItem("patient_timestamp", now.toString());
@@ -102,8 +102,8 @@ function DetailsView({id, setDetailView}) {
 		);
 
 	return (
-		<div className="w-full">
-		<div className="flex justify-between">
+		<div className="w-full overflow-scroll">
+		<div className="flex justify-between pb-2">
 		<button onClick={previousPage}>&lt;&lt;</button>
 		{ !edit ?
 			(<button onClick={() => setEdit(!edit)}>Edit</button>)
@@ -160,6 +160,7 @@ function DetailsEdit({patient, setValues, values, edit, selectedParam, setSelect
 	}
 
 	return (
+		<div className="overflow-auto flex justify-between px-10">
 		<dl className=" overflow-auto text-4xl grid items-center grid-cols-2 gap-x-20 gap-y-8 w-full">
 		  <dt className="font-semibold text-right">Family name</dt>
 		  <dd>
@@ -205,6 +206,8 @@ function DetailsEdit({patient, setValues, values, edit, selectedParam, setSelect
 			  className="border px-2 py-1 w-full"
 			/>
 		  </dd>
+		 </dl>
+		<dl className=" overflow-auto text-4xl grid items-center grid-cols-2 gap-x-4 gap-y-8 w-full">
 
 		  <dt className="font-semibold text-right">Parameters</dt>
 		  <dd>
@@ -217,13 +220,8 @@ function DetailsEdit({patient, setValues, values, edit, selectedParam, setSelect
 					setSelectedParam={setSelectedParam}
 				/>
 		  </dd>
-			<dl>
-				<dd>{values.familyName} </dd>
-				<dd>{values.givenName} </dd>
-				<dd>{values.sex} </dd>
-				<dd>{values.birthDate}</dd>
-			</dl>
 		</dl>
+		</div>
 	);
 }
 

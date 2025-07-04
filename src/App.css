@@ -31,7 +31,7 @@ button:active {
 }
 
 table {
-	@apply border-[ED1C24] rounded-2xl;
+	@apply border-[#ED1C24] rounded-2xl;
 }
 
 th ,td {
@@ -40,7 +40,7 @@ th ,td {
 
 td:hover,
 th:hover {
-	@apply border-[#ED1C24] text-[#487aa0];
+	@apply border-[#ED1C24] border-2 text-[#487aa0];
 }
 
 dt {

@@ -25,6 +25,7 @@ import DetailsView from "./DetailsView";
 
 */
 function PatientRegister({ onClose }) {
+	const [loading, setLoading] = useState(true);
 	const [patients, setPatients] = useState([]);
 	const [filterPrompt, setFilterPrompt] = useState(false);
 	const [detailView, setDetailView] = useState(null);
@@ -60,6 +61,7 @@ function PatientRegister({ onClose }) {
 			const data = await getPatients();
 			if (JSON.stringify(data) !== JSON.stringify(cachedData)) {
 				setPatients(data);
+				setLoading(false);
 				sessionStorage.setItem("Patients", JSON.stringify(data));
 				sessionStorage.setItem("patients_timestamp", now.toString());
 			}
@@ -76,6 +78,7 @@ function PatientRegister({ onClose }) {
 			const now = Date.now();
 			const data = await getPatients();
 			setPatients(data);
+			setLoading(false);
 			sessionStorage.setItem("Patients", JSON.stringify(data));
 			sessionStorage.setItem("patients_timestamp", now.toString());
 		}
@@ -92,14 +95,17 @@ function PatientRegister({ onClose }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-opacity-100 z-70 pointer-events-none">
 	  <div className="border-[#ed1c24] bg-white border-4  p-6 rounded-2xl text-[#333333] w-3/4 h-2/3 shadow-lg pointer-events-auto overflow-hidden">
-	  <div className=" flex items-center pt-8 justify-between w-full">
+	  <div className=" flex items-center pt-4 justify-between w-full">
 			  <button className="items-start justify-start pl-10" onClick={refresh}>Refresh</button>
 			  <button className="items-start justify-end" onClick={onClose}>Close</button>
 			  {detailView === null &&
 				  <button className="items-start justify-end" onClick={toFilter}>Filter</button>
 			  }
 	  </div>
-		  <div className="table-center pt-20 h-[80%] rounded-2xl">
+	  {loading ?
+		  (<span>Loading...</span>)
+		  :
+		  (<div className="table-center pt-10 h-[80%] rounded-2xl">
 	  	  {detailView === null ? (
 			  <table className="min-w-full h-[90%] items-center overflow-auto rounded-2xl">
 				<thead className="rounded-2xl">
@@ -139,7 +145,8 @@ function PatientRegister({ onClose }) {
 			  :
 			  (<DetailsView id={detailView} setDetailView={setDetailView} /> )
 		  }
-	  	  </div>
+	  	  </div>)
+	  }
 	  </div>
 	</div>
   )

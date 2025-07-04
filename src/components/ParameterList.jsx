@@ -18,13 +18,16 @@ function ParameterList({parameters, edit, values, setValues, selectedParam, setS
 
 
 	return (
-		<div>
+		<div className="overflow-scroll">
 			<select 
 				value={selectedParam}
 				onChange={(event) => setSelectedParam(Number(event.target.value))}
+				className="border-[#ed1c24] text-[ed1c24]"
 		>
 		{parameters.map((param, idx) => (
-			<option key={param.id ?? idx} value={idx}>
+			<option key={param.id ?? idx} value={idx}
+				className="border-[#ed1c24] text-[ed1c24]"
+			>
 				{param.name ?? `Parameter ${idx}`}
 			</option>
 		))}
@@ -35,17 +38,20 @@ function ParameterList({parameters, edit, values, setValues, selectedParam, setS
 					{!edit ?
 						(<><strong className="text-[#ed1c224]">{key}:</strong> {String(value)}</>)
 						:
-						(<input
+						(<dl grid className="grid grid-cols-2 items-center w-full">
+							<dt>{key}</dt>
+							<dd><input
 							placeholder={key === "alarm" ? "true/false" : value}
 							name={key}
 							value={values.parameters[selectedParam]?.[key] ?? value}
 							onChange={handleChange}
-						/>)
+							/>
+							</dd>
+						</dl>)
 					}
 				</div>
 			))}
 		</div>
-
 		</div>
 	)
 }

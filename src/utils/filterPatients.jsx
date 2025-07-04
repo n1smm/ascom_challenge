@@ -54,7 +54,9 @@ function sortPatients(patients, sorts) {
 	if (sorts.sex)
 		sorted.sort((a,b) => (a.sex.localeCompare(b.sex)));
 	if (sorts.dateOfBirth)
-		sorted.sort((a,b) => (new Date(a.dateOfBirth) - new Date(b.dateOfBirth)));
+		sorted.sort((a,b) => (new Date(a.birthDate) - new Date(b.birthDate)));
+	if (sorts.parameters)
+		sorted.sort((a,b) => (a.parameters?.length ?? 0) - (b.parameters?.length ?? 0));
 	// if (sorts.alarm) {
 	// 	sorted.sort((a,b) => ();
 	// }
