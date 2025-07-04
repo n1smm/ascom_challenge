@@ -102,15 +102,17 @@ function DetailsView({id, setDetailView}) {
 		);
 
 	return (
-		<div className="overflow-hidden">
+		<div className="w-full">
+		<div className="flex justify-between">
 		<button onClick={previousPage}>&lt;&lt;</button>
 		{ !edit ?
 			(<button onClick={() => setEdit(!edit)}>Edit</button>)
 			:
 			(<button onClick={() => applyChange()}>Apply</button>)
 		}
+		</div>
 		{ !edit ? (
-			<dl className=" text-4xl grid grid-cols-2 gap-x-20 gap-y-8">
+			<dl className=" overflow-auto text-4xl grid grid-cols-2 gap-x-20 gap-y-8">
 				<dt className="font-semibold text-right">Family name</dt>
 				<dd className="text-left">{patient.familyName}</dd>
 
@@ -158,7 +160,7 @@ function DetailsEdit({patient, setValues, values, edit, selectedParam, setSelect
 	}
 
 	return (
-		<dl className="text-4xl grid items-center grid-cols-2 gap-x-20 gap-y-8 w-full">
+		<dl className=" overflow-auto text-4xl grid items-center grid-cols-2 gap-x-20 gap-y-8 w-full">
 		  <dt className="font-semibold text-right">Family name</dt>
 		  <dd>
 			<input

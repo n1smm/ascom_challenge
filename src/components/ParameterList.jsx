@@ -33,7 +33,7 @@ function ParameterList({parameters, edit, values, setValues, selectedParam, setS
 			{Object.entries(parameters[selectedParam]).map(([key, value]) => (
 				<div key={key}>
 					{!edit ?
-						(<><strong>{key}:</strong> {String(value)}</>)
+						(<><strong className="text-[#ed1c224]">{key}:</strong> {String(value)}</>)
 						:
 						(<input
 							placeholder={key === "alarm" ? "true/false" : value}

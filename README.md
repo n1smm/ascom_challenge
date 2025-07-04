@@ -5,6 +5,14 @@ This is a React-based frontend application to manage and display patient data fr
 
 ---
 
+## color pallet
+- ascom red - #ED1C24
+- text - #4B4B4B
+- header - #333333
+- bg - #FFFFFF
+- clicked btn - #9CB6CC
+- button - 487aa0
+
 ## 📦 Project Overview
 
 **Goal:**

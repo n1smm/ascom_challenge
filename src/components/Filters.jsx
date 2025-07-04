@@ -7,10 +7,10 @@
 */
 function Filters({filters, setFilters, sorts, setSorts}) {
 	return (
-		<tr>
+		<tr className="no-hover">
 			<th className="border px-2 py-1">
 				<input 
-					className="w-full bg-gray-100 text-gray-500" placeholder="Family name" 
+					className="w-full bg-gray-100 text-[#597d97]" placeholder="Family name" 
 					value={filters.familyName}
 					onChange={(event) => setFilters((filter) => ({...filter, familyName: event.target.value}))}
 				/>
@@ -21,7 +21,7 @@ function Filters({filters, setFilters, sorts, setSorts}) {
 			</th>
 			<th className="border px-2 py-1">
 				<input 
-					className="w-full bg-gray-100 text-gray-500" placeholder="Given name" 
+					className="w-full bg-gray-100 text-[#597d97]" placeholder="Given name" 
 					value={filters.givenName}
 					onChange={(event) => setFilters((filter) => ({...filter, givenName: event.target.value}))}
 				/>
@@ -32,7 +32,7 @@ function Filters({filters, setFilters, sorts, setSorts}) {
 			</th>
 			<th className="border px-2 py-1">
 				<input 
-					className="w-full bg-gray-100 text-gray-500" placeholder="Sex" 
+					className="w-full bg-gray-100 text-[#597d97]" placeholder="Sex" 
 					value={filters.sex}
 					onChange={(event) => setFilters((filter) => ({...filter, sex: event.target.value}))}
 				/>
@@ -43,7 +43,7 @@ function Filters({filters, setFilters, sorts, setSorts}) {
 			</th>
 			<th className="border px-2 py-1">
 				<input 
-					className="w-full bg-gray-100 text-gray-500" placeholder="Date of birth" 
+					className="w-full bg-gray-100 text-[#597d97]" placeholder="Date of birth" 
 					value={filters.dateOfBirth}
 					onChange={(event) => setFilters((filter) => ({...filter, dateOfBirth: event.target.value}))}
 				/>
@@ -54,18 +54,19 @@ function Filters({filters, setFilters, sorts, setSorts}) {
 			</th>
 			<th className="border px-2 py-1">
 				<input 
-					className="w-full bg-gray-100 text-gray-500" placeholder="Parameters" 
+					className="w-full bg-gray-100 text-[#597d97]" placeholder="Parameters" 
 					value={filters.parameters}
 					onChange={(event) => setFilters((filter) => ({...filter, parameters: event.target.value}))}
 				/>
 				<input type="checkbox" 
+					className="peer ring-blue text-blue accent-[#597d97]"
 					checked={sorts.parameters} 
 					onChange={() => setSorts({...sorts, parameters: !sorts.parameters})} 
 				/>
 			</th>
 			<th className="border px-2 py-1">
 				<input 
-					className="w-full bg-gray-100 text-gray-500" placeholder="Alarm" 
+					className="w-full bg-gray-100 text-[#597d97]" placeholder="Alarm" 
 					value={filters.alarm}
 					onChange={(event) => setFilters((filter) => ({...filter, alarm: event.target.value}))}
 				/>

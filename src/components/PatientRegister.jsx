@@ -91,16 +91,18 @@ function PatientRegister({ onClose }) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-opacity-100 z-70 pointer-events-none">
-	  <div className="border-2 border-black  p-6 rounded bg-black w-3/4 h-2/3 shadow-lg pointer-events-auto overflow-scroll">
-		  <button className="items-start justify-end" onClick={refresh}>Refresh</button>
-		  <button className="items-start justify-end" onClick={onClose}>Close</button>
-	  	  {detailView === null &&
-			  <button className="items-start justify-end" onClick={toFilter}>Filter</button>
-		  }
-		  <div className="overflow-auto">
+	  <div className="border-[#ed1c24] bg-white border-4  p-6 rounded-2xl text-[#333333] w-3/4 h-2/3 shadow-lg pointer-events-auto overflow-hidden">
+	  <div className=" flex items-center pt-8 justify-between w-full">
+			  <button className="items-start justify-start pl-10" onClick={refresh}>Refresh</button>
+			  <button className="items-start justify-end" onClick={onClose}>Close</button>
+			  {detailView === null &&
+				  <button className="items-start justify-end" onClick={toFilter}>Filter</button>
+			  }
+	  </div>
+		  <div className="table-center pt-20 h-[80%] rounded-2xl">
 	  	  {detailView === null ? (
-			  <table className="min-w-full border">
-				<thead>
+			  <table className="min-w-full h-[90%] items-center overflow-auto rounded-2xl">
+				<thead className="rounded-2xl">
 					{filterPrompt && 
 						<Filters 
 							filters={filters}
@@ -109,8 +111,8 @@ function PatientRegister({ onClose }) {
 							setSorts={setSorts}
 						/>
 					}
-					<tr>
-						<th className="border px-2 py-1">Family name</th>
+					<tr className="no-hover">
+						<th className="border rounded-tl-2xl px-2 py-1">Family name</th>
 						<th className="border px-2 py-1">Given name</th>
 						<th className="border px-2 py-1">Sex</th>
 						<th className="border px-2 py-1">Date of birth</th>
