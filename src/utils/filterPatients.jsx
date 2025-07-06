@@ -1,4 +1,4 @@
-import patientProps from "./patientProps";
+import {patientProps} from "./patientProps";
 /**
 	returns filtered patient list (copy)
 */

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { AlarmIcon, AlarmClockIcon } from "../utils/patientProps";
 
 /**
 	specific patient info for PatientRegister
@@ -21,8 +22,7 @@ function Patient({patient, numParams, alarm, detailView, setDetailView}) {
 			<td className="border px-2 py-1">{sexCheck}</td>
 			<td className="border px-2 py-1">{readableDate}</td>
 			<td className="border px-2 py-1">{numParams}</td>
-			<td className="border px-2 py-1" onClick={changeAlarm}>{alarm ? "yes" : "no"}</td>
-			<td className="border px-2 py-1">0</td>
+			<td className="border px-2 py-1" onClick={changeAlarm}>{alarm ? <AlarmIcon/> : <AlarmClockIcon/>}</td>
 		</tr>
   )
 }

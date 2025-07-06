@@ -1,7 +1,7 @@
 import { getPatients } from "../axios/Api";
 import { useEffect, useState } from "react";
 import {filterPatients, sortPatients} from "../utils/filterPatients";
-import patientProps from "../utils/patientProps";
+import {patientProps} from "../utils/patientProps";
 import Patient from "./Patient";
 import Filters from "./Filters";
 import DetailsView from "./DetailsView";
@@ -70,6 +70,7 @@ function PatientRegister({ onClose }) {
 		}
 	};
 	useEffect(() => {
+		setLoading(false);
 		fetchPatients();
 	}, []);
 
@@ -105,9 +106,9 @@ function PatientRegister({ onClose }) {
 	  {loading ?
 		  (<span>Loading...</span>)
 		  :
-		  (<div className="table-center pt-10 h-[80%] rounded-2xl">
+		  (<div className=" overflow-auto table-center pt-10 h-[80%] rounded-2xl">
 	  	  {detailView === null ? (
-			  <table className="min-w-full h-[90%] items-center overflow-auto rounded-2xl">
+			  <table className="min-w-full items-center overflow-auto rounded-2xl">
 				<thead className="rounded-2xl">
 					{filterPrompt && 
 						<Filters 
@@ -124,7 +125,6 @@ function PatientRegister({ onClose }) {
 						<th className="border px-2 py-1">Date of birth</th>
 						<th className="border px-2 py-1">Parameters</th>
 						<th className="border px-2 py-1">Alarm</th>
-						<th className="border px-2 py-1">Info</th>
 					</tr>
 				</thead>
 				<tbody>
