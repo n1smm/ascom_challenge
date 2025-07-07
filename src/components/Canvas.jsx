@@ -11,11 +11,11 @@ function Canvas() {
 		canvas.width = width;
 		canvas.height = height;
 
-		const points = Array.from({length: 12}, () => ({
+		const points = Array.from({length: 12}, (a, i) => ({
 			x: Math.random() * width,
 			y: Math.random() * height,
-			vx: (Math.random() - 0.5) * 0.5,
-			vy: (Math.random() - 0.5) * 0.5,
+			vx: (Math.random() - 0.5) * 0.2 * i,
+			vy: (Math.random() - 0.5) * 0.2 * i,
 		}));
 
 		function animate() {
