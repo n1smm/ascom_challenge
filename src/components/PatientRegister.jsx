@@ -20,9 +20,10 @@ import DetailsView from "./DetailsView";
 	has a cache that updates only roughly every 5min (faster sequential loading)
 	in background it compares cache with fetched data to see, if it needs to refresh
 
-	TODO - caching has some bugs; but maybe they are jut based on how vite refreshes
-			sometimes the the table doesn't load after changing certain parts of DOMS
-
+	patients - where fetched patients data is stored
+	loading,filterPrompt,detailView - UI changes of the register window
+	filters - saves data to filter register by
+	sorts - checks if sth needs to be sorted
 */
 function PatientRegister({ onClose }) {
 	const [loading, setLoading] = useState(true);

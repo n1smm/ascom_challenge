@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { AlarmIcon, AlarmClockIcon } from "../utils/patientProps";
 
 /**
-	specific patient info for PatientRegister
+	specific patient info for PatientRegister (one row on a table)
 	(different from expanded info of a patient)
 */
 function Patient({patient, numParams, alarm, detailView, setDetailView}) {

@@ -3,6 +3,14 @@ import { getPatient, updatePatient } from "../axios/Api";
 import ParameterList from "./ParameterList";
 
 
+/**
+	where the detailed info of a patient is show, can toggle also editing patient info
+	patient - fetched info of a patient
+	edit - toggles edit mode
+	reset - refreshing data  logic(if loading to long)
+	selectedParam - for showing or editing desired parameter of patient
+	values - values that were changed by user
+*/
 
 function DetailsView({id, setDetailView}) {
 	const [patient, setPatient] = useState(null);
@@ -151,7 +159,9 @@ function DetailsView({id, setDetailView}) {
 	)
 }
 
-
+/** 
+	editing logic and element
+*/
 function DetailsEdit({patient, setValues, values, edit, selectedParam, setSelectedParam}) {
 
 	function handleChange(event) {

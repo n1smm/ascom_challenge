@@ -7,6 +7,7 @@ function patientProps(patient) {
 	return [numParams, alarm];
 };
 
+//alarm icon
 function AlarmIcon(props) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width={20} height={20} {...props}>
@@ -15,6 +16,7 @@ function AlarmIcon(props) {
   );
 }
 
+//ringing alarm clock icon
 function AlarmClockIcon(props) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width={20} height={20} {...props}>

@@ -1,3 +1,4 @@
+/** header with logo */
 function Header() {
 	return (
 		<div className="realtive w-full">

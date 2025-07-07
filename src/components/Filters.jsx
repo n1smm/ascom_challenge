@@ -3,7 +3,8 @@
 	sorting and filtering inputs
 
 	filtering can be done by multiple params at the same time
-	sorting not sure yet, how it behaves with multi-params - TODO
+	sorting not sure yet, how it behaves with multi-params 
+	logic for sorting and filtering is in utils/ this is jut UI element
 */
 function Filters({filters, setFilters, sorts, setSorts}) {
 	return (

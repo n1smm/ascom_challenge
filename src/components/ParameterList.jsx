@@ -1,5 +1,10 @@
 import {useState} from "react";
 
+/**
+	this takes care of showing a list of parameters of patient to select
+	and all the content of this parameters
+	it also handles potential editing of each parameter
+*/
 function ParameterList({parameters, edit, values, setValues, selectedParam, setSelectedParam}) {
 
 	function handleChange(event) {
