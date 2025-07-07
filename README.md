@@ -1,8 +1,7 @@
 # Ascom challenge
 # 🏥 Scuola42 Frontend Engineer Test – Patient Manager
 
-This is a React-based frontend application to manage and display patient data from a remote API. The application interacts with a secured REST API, supporting full CRUD functionality for patient entities and their parameters.
-
+This is a React-based frontend application to manage and display patient data from a remote API.
 ---
 
 
@@ -17,9 +16,6 @@ Develop a React application that manages "Patient" entities with support for dat
 **Swagger Docs:**
 [Swagger UI](https://mobile.digistat.it/CandidateApi/swagger/index.html)
 
-**Authentication (HTTP Basic Auth):**
-...
-
 ---
 
 ## 📁 Technologies Used
@@ -32,10 +28,10 @@ Develop a React application that manages "Patient" entities with support for dat
 
 ## 📁 Dependencies 
 project was tested with:
--ubuntu 24.04lts
--firefox 140.0.2
--node 22.12.0
--npm 11.0.0
+- ubuntu 24.04lts
+- firefox 140.0.2
+- node 22.12.0
+- npm 11.0.0
 ---
 
 ## 🚀 Getting Started
